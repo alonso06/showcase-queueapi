@@ -1,56 +1,58 @@
+README versión en [🇪🇸 Español](docs/README.es.md) 
+
 # Queue API priority showcase
 
 This project showcases how to build a well-structured API using the FastAPI framework and industry best practices.
 It follows a clean, scalable, and maintainable architecture, includes basic user security configurations, and serves as a reference for teams adopting FastAPI for their backend development.
 
 ## Application scope
+
 La API resuelve un problema real, observado en el sector salud e instituciones con atención en ventanilla, donde los tiempos de atención son dos o tres veces más que el tiempo en el que se da la respuesta. Esto debido principalmente a que no existe una separación de prioridades por cada solicitud, es decir, clientes que van por una consulta general comparten cola con clientes que van por citas médicas o tramites externos. Encontrando que las solicitudes más simples se ven retrasadas por solicitudes que requieren mayor tiempo de atención.
 
 ![Diagrama de arquitectura](./assets/images/problemschema.png)
 
+The API enables queue management by organizing them according to priority, aiming to prevent queues with too many clients and long waiting times for simple requests. It also automates client selection and distribution across queues, allowing the reassignment of clients to empty queues.
 
-La API permite la administración de colas organizandolas por prioridad, con la finalidad de evitar colas con demasidos clientes y tiempos de espera largos para solicitudes simples. Además, automatiza la selección y distribución de clientes en cada cola, pudiendo reasignar clientes en colas vacías. 
-
-La solución es escalable y se adapta a diferentes escenarios donde la gestión de colas sea crítica.
+The solution is scalable and adaptable to different scenarios where queue management is critical.
 
 ![Diagrama de arquitectura](./assets/images/solutionschema.png)
 
 
-El proyecto implementó clean architecture, las operaciones son asincronas para garantizar operaciones en paralelo y una mejor eficiencia, se empleó una base de datos relacional, y el protocolo Oauth2.0 junto JWT, para el inicio de sesión y seguridad de los endpoints.
+The project implements Clean Architecture. Operations are asynchronous to ensure parallel processing and improved efficiency. A relational database was used, along with the OAuth2.0 protocol and JWT for login and endpoint security.
 
 Modules:
 
-- Authorization: relacionado con el inicio de sesión
-- Users: administra los usuarios del sistema
-- Priorities: administra las prioridades que puede tener una cola o un cliente
-- Roles: administra los roles de cada usuario
-- Permissions: muestra los permisos asociados a cada role
-- Customers: administra los clientes de cada cola
-- Queues: administra las colas en el sistema
+- Authorization: Handles user authentication
+- Users: Manages system users
+- Priorities: Manages the priority levels for queues or clients
+- Roles: Manages user roles
+- Permissions: Displays the permissions associated with each role
+- Customers: Manages the clients within each queue
+- Queues: Manages the queues in the system
 
 ## Tech-stack
 
 Core Technologies:
 
-- Fastapi (0.115.6)
-- SqlAlchemy (2.0.36): soporte de operaciones asincronas.
-- Sqlmodel (0.0.22): creación de la base de datos
-- Pydantic (2.10.4): creación de schemas para la transferencia de datos
-- uvicorn (0.34.0): servidor local
-- Passlib (1.7.4): encriptación
+- FastAPI (0.115.6)
+- SQLAlchemy (2.0.36): supports asynchronous operations
+- SQLModel (0.0.22): used for database creation
+- Pydantic (2.10.4): defines schemas for data transfer
+- Uvicorn (0.34.0): local server
+- Passlib (1.7.4): encryption
 
 ## Architecture
-- Clean architecture: separación de responsabilidades usando cuatro capas
+
+- Clean architecture: separation of responsibilities using four layers
     - Domain
     - Application
     - Interfaces
     - Infrastructure
 
-
 ![Diagrama de arquitectura](./assets/images/architecture.png)
 
 
-Sistema de archivos
+File system
 
     .
     ├── asgi.py
@@ -89,45 +91,45 @@ Sistema de archivos
     │       ├── reset_order_numbers.py
     │       └── schedule_restart.py
 
-- asgi: archivo de configuración para el inicio de la API
-- docker-compose.yml: configuración del contenedor que inicia la base de datos.
-- migrations: carpeta que almacena las migraciones a la base de datos
-- README: documentación del proyecto
-- requirements: contiene las dependencias del proyecto para desarrollo y producción
--  src/domain: definición de las reglas del negocio
-    - entities: entidades del negocio y DTOs
-    - repositories/interfaces: firma de las funcionalidades
-    - constant: valores de los permisos (útil para un acceso rápido) 
-    - exceptions: manejo de excepciones técnicas y del negocio 
-- src/application: orquestador de las reglas del negocio en la aplicación 
-    - use_cases: reglas del negocio en la app
-- src/interfaces: exposición de endpoints
-    - routers: definición de endpoints
-    - schemas: definición de los objetos para la trasnferencia de información con el cliente (usuario final)
-    - exception_handlers: traducción de las excepciones a lenguaje de usuario
-- src/infrastructure: implementación de las abstracciones
-    - dependencies: contiene factories y depencias para evitar la dependecia de librerías externas en las capas principales.
-    - models: definición de los modelos de base de datos
-    - repositories: implementación de los repositories definidos en la capa dominio
-    - security: configuración de oauth2.0 y token con jwt
-- src/utils: configuraciones logs, fake datos, mappings.
-- .env: variables de entorno
+- asgi: configuration file for starting the API
+- docker-compose.yml: container configuration that initializes the database
+- migrations: folder storing database migration files
+- README: project documentation
+- requirements: contains project dependencies for both development and production
+- src/domain: defines business rules
+    - entities: business entities and DTOs
+    - repositories/interfaces: declaration of functionality signatures
+    - constants: permission values (useful for quick access)
+    - exceptions: handling of technical and business exceptions
+- src/application: orchestrates business rules within the application
+    - use_cases: business rules applied in the app
+- src/interfaces: exposes API endpoints
+    - routers: endpoint definitions
+    - schemas: defines objects for data transfer between client and server (end user)
+    - exception_handlers: translates exceptions into user-friendly messages
+- src/infrastructure: implements the abstractions
+    - dependencies: contains factories and dependencies to avoid external library coupling in core layers
+    - models: database model definitions
+    - repositories: implementation of repositories defined in the domain layer
+    - security: configuration of OAuth2.0 and JWT tokens
+- src/utils: logging configuration, fake data, and mappings
+- .env: environment variables
 
 ## Security:
-- Oatuh2.0: inicio de sesión y protección de endpoints
-- JWT: traslado de información
 
-Ejemplo de la función de validación de token
+- Oatuh2.0: handles login and endpoint protection
+- JWT: transfers user information
+
+Example of the token validation function
 
 ![Diagrama de arquitectura](./assets/images/security_function.png)
 
 
-## Endpoints y respuestas esperada
+## Endpoints and expected responses
 
-A contiuación se muestra un ejemplo de un endpoint para la creación de un nuevo usuario, junto con su esquema de respuesta esperado.
+Below is an example of an endpoint for creating a new user, along with its expected response schema.
 
-
-Endpoint: Crear nuevo usuario
+Endpoint: Create new user
 
 ```python
 
@@ -141,7 +143,7 @@ Endpoint: Crear nuevo usuario
 
 ``` 
 
-Salida esperada:
+Expected output:
 
 Example schema reponse create user
 
@@ -165,18 +167,20 @@ Example schema reponse create user
 
 ## Dataflow
 
-El siguiente diagrama muestra el flujo de datos entre las cuatro capas de la API. 
+The following diagram shows the data flow between the four layers of the API.
 
 ![Diagrama de arquitectura](./assets/images/dataflow.png)
 
-El flujo de datos inicia en la capa interfaces, donde se reciben las solicitudes HTTP. Todos los usuarios previamente deben autenticarse para obtener un token JWT, el cual, es utilizado para autorizar el acceso a los endpoints protegidos según los permisos asociados.
+The data flow begins in the interfaces layer, where HTTP requests are received. All users must first authenticate to obtain a JWT token, which is then used to authorize access to protected endpoints according to their assigned permissions.
 
-Dependiendo de la verificación de permisos, la solicitud se procesa o se rechaza con un HTTP response error. Si la solicitud es válida, se ejecuta un factoy que inyecta las dependencias necesarias para la ejecución del caso de uso, en este caso la implementación de los repositorios.
+Depending on the permission verification, the request is either processed or rejected with an HTTP response error. If the request is valid, a factory is executed to inject the necessary dependencies for the use case execution — in this case, the implementation of repositories.
 
-    Nota: cada repositorio implementado en la capa infrastructure, fue definido en la capa domain usando una interfaz.
+    Note: Each repository implemented in the infrastructure layer was previously defined in the domain layer using an interface.
 
-Los repositorios implementados, realizan operaciones CRUD en la base de datos, usando los modelos definidos con el ORM. El resultado de las operaciones se retorna al caso de uso para luego enviarselo de regreso a la capa interfaces, donde se transforma en un schema de respuesta y se envía al cliente.
+The implemented repositories perform CRUD operations on the database using ORM-defined models. The result of these operations is returned to the use case and then sent back to the interfaces layer, where it is transformed into a response schema and returned to the client.
 
 
 ## Project scope and limitations
-Este showcase se centra en describir la arquitectura, flujo de datos y detalles técnicos usados en el desarrollo de la API. Los repositorios y casos de uso emplean inyección de dependencias aunque no se profundiza en eso para realizar una descripción más clara y concisa del proyecto.
+
+This showcase focuses on describing the architecture, data flow, and technical details used in the API’s development.
+Repositories and use cases make use of dependency injection, although this concept is not explored in depth to maintain a clear and concise project description.
