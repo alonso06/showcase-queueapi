@@ -1,13 +1,13 @@
-README versión en [🇪🇸 Español](docs/README.es.md) 
+README versión en [🇪🇸 Español](docs/README.es.md)
 
-# Queue API priority showcase
+# Showcase REST API for managing service queues in businesses.
 
 This project showcases how to build a well-structured API using the FastAPI framework and industry best practices.
 It follows a clean, scalable, and maintainable architecture, includes basic user security configurations, and serves as a reference for teams adopting FastAPI for their backend development.
 
 ## Application scope
 
-La API resuelve un problema real, observado en el sector salud e instituciones con atención en ventanilla, donde los tiempos de atención son dos o tres veces más que el tiempo en el que se da la respuesta. Esto debido principalmente a que no existe una separación de prioridades por cada solicitud, es decir, clientes que van por una consulta general comparten cola con clientes que van por citas médicas o tramites externos. Encontrando que las solicitudes más simples se ven retrasadas por solicitudes que requieren mayor tiempo de atención.
+The API addresses a real-world problem observed in the healthcare sector and institutions with counter service, where waiting times are two or three times longer than the actual service time. This is mainly because there is no separation of priorities for each request. In other words, clients seeking general inquiries share the same queue with those scheduling medical appointments or handling external procedures, causing simpler requests to be delayed by those that require longer service times.
 
 ![Diagrama de arquitectura](./assets/images/problemschema.png)
 
@@ -16,7 +16,6 @@ The API enables queue management by organizing them according to priority, aimin
 The solution is scalable and adaptable to different scenarios where queue management is critical.
 
 ![Diagrama de arquitectura](./assets/images/solutionschema.png)
-
 
 The project implements Clean Architecture. Operations are asynchronous to ensure parallel processing and improved efficiency. A relational database was used, along with the OAuth2.0 protocol and JWT for login and endpoint security.
 
@@ -44,13 +43,12 @@ Core Technologies:
 ## Architecture
 
 - Clean architecture: separation of responsibilities using four layers
-    - Domain
-    - Application
-    - Interfaces
-    - Infrastructure
+  - Domain
+  - Application
+  - Interfaces
+  - Infrastructure
 
 ![Diagrama de arquitectura](./assets/images/architecture.png)
-
 
 File system
 
@@ -97,21 +95,21 @@ File system
 - README: project documentation
 - requirements: contains project dependencies for both development and production
 - src/domain: defines business rules
-    - entities: business entities and DTOs
-    - repositories/interfaces: declaration of functionality signatures
-    - constants: permission values (useful for quick access)
-    - exceptions: handling of technical and business exceptions
+  - entities: business entities and DTOs
+  - repositories/interfaces: declaration of functionality signatures
+  - constants: permission values (useful for quick access)
+  - exceptions: handling of technical and business exceptions
 - src/application: orchestrates business rules within the application
-    - use_cases: business rules applied in the app
+  - use_cases: business rules applied in the app
 - src/interfaces: exposes API endpoints
-    - routers: endpoint definitions
-    - schemas: defines objects for data transfer between client and server (end user)
-    - exception_handlers: translates exceptions into user-friendly messages
+  - routers: endpoint definitions
+  - schemas: defines objects for data transfer between client and server (end user)
+  - exception_handlers: translates exceptions into user-friendly messages
 - src/infrastructure: implements the abstractions
-    - dependencies: contains factories and dependencies to avoid external library coupling in core layers
-    - models: database model definitions
-    - repositories: implementation of repositories defined in the domain layer
-    - security: configuration of OAuth2.0 and JWT tokens
+  - dependencies: contains factories and dependencies to avoid external library coupling in core layers
+  - models: database model definitions
+  - repositories: implementation of repositories defined in the domain layer
+  - security: configuration of OAuth2.0 and JWT tokens
 - src/utils: logging configuration, fake data, and mappings
 - .env: environment variables
 
@@ -123,7 +121,6 @@ File system
 Example of the token validation function
 
 ![Diagrama de arquitectura](./assets/images/security_function.png)
-
 
 ## Endpoints and expected responses
 
@@ -141,7 +138,7 @@ Endpoint: Create new user
         user = await user_use_case.create(data_obj=DtoUserCreate(**user_data.model_dump()))
         return ViewUser(**asdict(user))
 
-``` 
+```
 
 Expected output:
 
@@ -150,7 +147,7 @@ Example schema reponse create user
 ![Diagrama de arquitectura](./assets/images/viewuserschema.png)
 
 ```json
-# JSON Response 
+# JSON Response
 
 {
   "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
@@ -178,7 +175,6 @@ Depending on the permission verification, the request is either processed or rej
     Note: Each repository implemented in the infrastructure layer was previously defined in the domain layer using an interface.
 
 The implemented repositories perform CRUD operations on the database using ORM-defined models. The result of these operations is returned to the use case and then sent back to the interfaces layer, where it is transformed into a response schema and returned to the client.
-
 
 ## Project scope and limitations
 
